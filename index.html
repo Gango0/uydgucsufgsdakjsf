@@ -1,88 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>Video 360° VR</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-<script src="https://rawgit.com/ngokevin/aframe-text-component/master/dist/aframe-text-component.min.js"></script>
-<script src="https://rawgit.com/robertogerson/aframe-subtitle/master/dist/aframe-subtitle.min.js"></script>
-
+    <meta charset="UTF-8">
+    <title>video</title>
   </head>
-  <body style="margin: 0; overflow: hidden;">
-    <button id="startButton" style="position:absolute;z-index:999;top:20px;left:20px;">Avvia Video</button>
-
-    <div id="overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:100; background:transparent;"></div>
-
-    <div id="container" style="display: flex; width: 100%; height: 100vh;">
-      <iframe id="leftIframe" src="scene-left.html" style="flex: 1; border: none;"></iframe>
-      <iframe id="rightIframe" src="scene-right.html" style="flex: 1; border: none;"></iframe>
-    </div>
-
-    <script>
-      const btn = document.getElementById('startButton');
-      const overlay = document.getElementById('overlay');
-      const container = document.getElementById('container');
-
-      btn.addEventListener('click', () => {
-        const leftIframe = document.getElementById('leftIframe').contentWindow;
-        const rightIframe = document.getElementById('rightIframe').contentWindow;
-
-        // 1. Avvia prima i video (contesto utente valido)
-        leftIframe.postMessage('playVideo', '*');
-        rightIframe.postMessage('playVideo', '*');
-
-        // 2. Nascondi il pulsante
-        btn.style.display = 'none';
-
-        // 3. Entra in fullscreen dopo un piccolo delay
-        setTimeout(() => {
-          if (container.requestFullscreen) {
-            container.requestFullscreen();
-          } else if (container.webkitRequestFullscreen) {
-            container.webkitRequestFullscreen();
-          }
-        }, 300); // ritardo per assicurarsi che play sia già partito
-
-        // 4. Attiva sensore
-        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-          DeviceOrientationEvent.requestPermission()
-            .then(state => {
-              if (state === 'granted') {
-                window.addEventListener('deviceorientation', handleOrientation);
-              }
-            })
-            .catch(console.error);
-        } else {
-          window.addEventListener('deviceorientation', handleOrientation);
-        }
-
-        function handleOrientation(event) {
-          const rotation = {
-            alpha: event.alpha || 0,
-            beta: event.beta || 0,
-            gamma: event.gamma || 0
-          };
-          rightIframe.postMessage({ type: 'deviceRotation', rotation }, '*');
-        }
-      });
-    </script>
-    <script>
-  AFRAME.registerComponent('load-srt', {
-    init: function () {
-      const video = document.querySelector('#video360Left');
-      const subtitleEntity = document.querySelector('[subtitle]');
-      video.addEventListener('play', () => {
-        fetch(subtitleEntity.getAttribute('subtitle').srt)
-          .then(response => response.text())
-          .then(data => {
-            const srtText = data.split('\n');
-            // Aggiungi codice per interpretare i sottotitoli e sincronizzarli con il video
-          });
-      });
-    }
-  });
-</script>
-
+  <body style="margin: 0; padding: 0;">
+    <iframe src="https://intranet.0089132.xyz/video.html" style="width: 100%; height: 100vh; border: none;"></iframe>
   </body>
 </html>
