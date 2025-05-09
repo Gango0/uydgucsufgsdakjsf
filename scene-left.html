@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Occhio Sinistro - Video 360°</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <style>
+      #subtitle {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 24px;
+        text-shadow: 2px 2px 4px black;
+        z-index: 999;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Overlay sottotitoli -->
+    <div id="subtitle"></div>
+
+    <a-scene>
+      <a-assets>
+        <video id="video360Left" loop crossorigin="anonymous" playsinline webkit-playsinline>
+          <source src="assets/video/video360.mp4" type="video/mp4">
+          <track id="track" src="assets/subtitles/video360.vtt" kind="subtitles" srclang="it" label="Italiano" default>
+        </video>
+      </a-assets>
+
+      <a-videosphere src="#video360Left" rotation="0 -90 0"></a-videosphere>
+
+      <a-camera wasd-controls-enabled="false" look-controls>
+        <a-cursor></a-cursor>
+      </a-camera>
+    </a-scene>
+
+    <script>
+      const video = document.getElementById('video360Left');
+      const track = video.textTracks[0];
+      const subtitleDiv = document.getElementById('subtitle');
+
+      track.mode = 'hidden';
+
+      track.addEventListener('cuechange', () => {
+        const cue = track.activeCues[0];
+        subtitleDiv.textContent = cue ? cue.text : '';
+      });
+
+      window.addEventListener('message', (event) => {
+        if (event.data === 'playVideo') {
+          video.play();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Occhio Destro - Video 360°</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <video id="video360Right" loop muted crossorigin="anonymous" playsinline webkit-playsinline>
+          <source src="assets/video/video360.mp4" type="video/mp4">
+        </video>
+      </a-assets>
+
+      <a-videosphere src="#video360Right" rotation="0 -90 0"></a-videosphere>
+
+      <a-camera wasd-controls-enabled="false" look-controls>
+        <a-cursor></a-cursor>
+      </a-camera>
+    </a-scene>
+
+    <script>
+      // Ascoltiamo il messaggio dal genitore per avviare il video
+      window.addEventListener('message', (event) => {
+        if (event.data === 'playVideo') {
+          const video = document.getElementById('video360Right');
+          video.play();
+        }
+      });
+    </script>
+  </body>
+  <!-- Uguale a prima, ma togli sync-rotation -->
+
+<script>
+  window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'deviceRotation') {
+      const { alpha, beta, gamma } = event.data.rotation;
+      const camera = document.querySelector('a-camera');
+
+      if (camera && camera.components['look-controls']) {
+        const rad = Math.PI / 180;
+        camera.object3D.rotation.set(
+          THREE.Math.degToRad(beta || 0),
+          THREE.Math.degToRad(alpha || 0),
+          THREE.Math.degToRad(-gamma || 0)
+        );
+      }
+    }
+
+    if (event.data === 'playVideo') {
+      document.getElementById('video360Right').play();
+    }
+  });
+</script>
+
+
+
+</html>
